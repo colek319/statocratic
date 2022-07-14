@@ -1,12 +1,13 @@
 package democracy
 
 import (
+	"gonum.org/v1/gonum/mat"
 	"math/rand"
 	"strconv"
 )
 
 type Democracy struct {
-	states     []State
+	States     []State
 	population int
 }
 
@@ -18,14 +19,14 @@ func NewDemocracyWithStates(population, numStates, numPolicy int) Democracy {
 		states = append(states, NewStateWithCitizens(peoplePerState, numPolicy))
 	}
 	return Democracy{
-		states:     states,
+		States:     states,
 		population: peoplePerState * numStates, // Note that population isn't necessarily what we input
 	}
 }
 
 type State struct {
-	Citizens         []Citizen
-	PolicyPreference Policy
+	C mat.Matrix // citizens matrix
+	P mat.Vector // state policy vector
 }
 
 func NewStateWithCitizens(population, numPolicy int) State {
@@ -33,9 +34,12 @@ func NewStateWithCitizens(population, numPolicy int) State {
 	for i := 0; i < population; i++ {
 		citizens = append(citizens, NewCitizenWithPolicy(numPolicy))
 	}
+	// TODO: add random entries
+	C := mat.NewDense(population, numPolicy, nil)
+	P := mat.NewVecDense(numPolicy, nil)
 	return State{
-		Citizens:         citizens,
-		PolicyPreference: NewPolicy(numPolicy),
+		C: C,
+		P: P,
 	}
 }
 
