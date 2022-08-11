@@ -6,6 +6,8 @@ import (
 	"strconv"
 )
 
+// adding some test comments
+
 type Democracy struct {
 	States     []State
 	population int
